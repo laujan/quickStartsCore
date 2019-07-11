@@ -1,0 +1,92 @@
+﻿@page "/channelGroup"
+@using quickStartPersonalTab
+
+@{
+    Layout = "_Layout";
+}
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+<script src='https://statics.teams.microsoft.com/sdk/v1.4.3/js/MicrosoftTeams.min.js'></script>
+
+<script>
+    microsoftTeams.initialize();
+</script>
+
+<script>
+    let saveRed = () => {
+        microsoftTeams.settings.registerOnSaveHandler(function (saveEvent) {
+            microsoftTeams.settings.setSettings({
+                websiteUrl: "https://f79cb79e.ngrok.io",
+                contentUrl: "https://f79cb79e.ngrok.io/red/",
+                entityId: "tabby",
+                suggestedDisplayName: "tabby"
+            });
+            saveEvent.notifySuccess();
+        });
+    }
+
+    let saveGray = () => {
+        microsoftTeams.settings.registerOnSaveHandler(function (saveEvent) {
+            microsoftTeams.settings.setSettings({
+                websiteUrl: "https://f79cb79e.ngrok.io",
+                contentUrl: "https://f79cb79e.ngrok.io/gray/",
+                entityId: "tabby",
+                suggestedDisplayName: "tabby"
+            });
+            saveEvent.notifySuccess();
+        });
+    }
+</script>
+
+@{
+    <section style="width: 100%; display: table">
+        <div style="display:table-row">
+            <div style="width: auto; display:table-cell;">
+                @{ ChannelGroup gray = new ChannelGroup();
+                    string g = ($"{@gray.GetColor()} gray!'");
+                    <div id="gray" style="display:none;">@g</div>
+                }
+            </div>
+
+            <div style="display: table-cell">
+                @{ ChannelGroup red = new ChannelGroup();
+                    string r = ($"{@red.GetColor()} red!'");
+                    <div id="red" style="display:none;">@r</div>
+                }
+
+            </div>
+
+        </div>
+    </section>
+}
+
+<script>
+    let gr = document.getElementById("gray").style;
+    let rd = document.getElementById("red").style;
+
+    const colorClickGray = () => {
+        gr.display = "block";
+        rd.display = "none";
+        microsoftTeams.settings.setValidityState(true);
+        saveGray()
+    }
+
+    const colorClickRed = () => {
+        rd.display = "block";
+        gr.display = "none";
+        microsoftTeams.settings.setValidityState(true);
+        saveRed();
+    }
+</script>
+
+<p>
+    <h2>Configure your tab:</h2>
+    <br />
+    <br />
+</p>
+
+<button onclick="(document.getElementById('icon').src = '/images/iconGray.png'); colorClickGray()">Select Gray</button>
+
+<img id="icon" src="/images/teamsLogo.png" alt="icon" style="width:100px" />
+
+<button onclick="(document.getElementById('icon').src = '/images/iconRed.png'); colorClickRed()">Select Red</button>
